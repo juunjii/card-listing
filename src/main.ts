@@ -21,8 +21,10 @@ function startup() {
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
+
   let sortOrder: string = sortButton.value;
   const isAscending: number = sortOrder === "ascending" ? 1 : -1;
+  
   let nameToNum: Map<string, number> = new Map([
     ["Ainok Bond-Kin", 5],
     ["Wrenn and Six", 553],
