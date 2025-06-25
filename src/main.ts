@@ -15,7 +15,6 @@ function sortGridItems(
 }
 
 function startup() {
-  console.log("im in startup");
   const gridContainer = document.querySelector(".card-catalog");
   // Create array of grid items
   const gridItems = Array.from(gridContainer!.children);
@@ -24,7 +23,6 @@ function startup() {
   ) as HTMLSelectElement;
   let sortOrder: string = sortButton.value;
   const isAscending: number = sortOrder === "ascending" ? 1 : -1;
-  console.log(isAscending);
   let nameToNum: Map<string, number> = new Map([
     ["Ainok Bond-Kin", 5],
     ["Wrenn and Six", 553],
@@ -40,14 +38,12 @@ function startup() {
 }
 
 function sortCollectorNum() {
-  console.log("in sortCollectorNum()");
   const gridContainer = document.querySelector(".card-catalog");
   // Create array of grid items
   const gridItems = Array.from(gridContainer!.children);
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
-  console.log(sortButton.value);
 
   // Mapping of card name to collector number
   let nameToNum: Map<string, number> = new Map([
