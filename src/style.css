@@ -1,0 +1,87 @@
+/* Your styles here */
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 68px;
+  font-weight: 400;
+
+  background-color: white;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0px;
+  margin-top: 96px;
+  margin-bottom: 96px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 60px;
+  text-shadow: 1px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-top: 0px;
+  margin-bottom: 48px;
+}
+
+.card-banner {
+  width: 100%;
+}
+
+.content-container {
+  margin-left: 235px;
+  margin-right: 235px;
+  margin-top: 20px;
+}
+
+.sort-container {
+  text-align: right;
+  height: 50px;
+  margin-bottom: 24px;
+}
+
+.card-catalog {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 48px;
+  margin-top: 24px;
+  justify-self: center;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.set-collector {
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 32px;
+  height: 64px;
+  width: 416px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.card-name {
+  font-size: 24px;
+  color: black;
+}
+
+.card-description {
+  line-height: 24px;
+  width: 416px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.card {
+  height: 604px;
+  width: 416px;
+}
