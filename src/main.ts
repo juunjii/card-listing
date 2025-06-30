@@ -14,7 +14,7 @@ function sortGridItems(
   });
 }
 
-function startup() {
+function startup(): void  {
   const gridContainer = document.querySelector(".card-catalog");
   // Create array of grid items
   const gridItems = Array.from(gridContainer!.children);
@@ -39,7 +39,7 @@ function startup() {
   });
 }
 
-function sortCollectorNum() {
+function sortCollectorNum(): void {
   const gridContainer = document.querySelector(".card-catalog");
   // Create array of grid items
   const gridItems = Array.from(gridContainer!.children);
