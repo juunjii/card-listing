@@ -6,22 +6,39 @@ function sortGridItems(
   nameToNum: Map<string, number>
 ) {
   gridItems.sort((a, b) => {
-    const cardA = a.querySelector("img")!.alt;
-    const cardB = b.querySelector("img")!.alt;
+    const imgA = a.querySelector("img");
+    const imgB = b.querySelector("img");
+
+    if (!imgA || !imgB) return 0;
+
+    const cardA = imgA.alt;
+    const cardB = imgB.alt;
+
     const numA = nameToNum.get(cardA);
     const numB = nameToNum.get(cardB);
-    return (numA! - numB!) * isAscending;
+
+    if (numA === undefined || numB === undefined) return 0;
+
+    return (numA - numB) * isAscending;
   });
 }
 
 function startup(): void  {
   const gridContainer = document.querySelector(".card-catalog");
-  // Create array of grid items
-  const gridItems = Array.from(gridContainer!.children);
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
 
+  if (
+    !(gridContainer instanceof HTMLElement) ||
+    !(sortButton instanceof HTMLSelectElement)
+  ) {
+    console.error("Required DOM elements not found or have incorrect types.");
+    return;
+  }
+  // Create array of grid items
+  const gridItems = Array.from(gridContainer.children);
+ 
   let sortOrder: string = sortButton.value;
   const isAscending: number = sortOrder === "ascending" ? 1 : -1;
   
@@ -42,10 +59,19 @@ function startup(): void  {
 function sortCollectorNum(): void {
   const gridContainer = document.querySelector(".card-catalog");
   // Create array of grid items
-  const gridItems = Array.from(gridContainer!.children);
+  const gridItems = Array.from(gridContainer.children);
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
+
+
+  if (
+    !(gridContainer instanceof HTMLElement) ||
+    !(sortButton instanceof HTMLSelectElement)
+  ) {
+    console.error("Required DOM elements not found or have incorrect types.");
+    return;
+  }
 
   // Mapping of card name to collector number
   let nameToNum: Map<string, number> = new Map([
