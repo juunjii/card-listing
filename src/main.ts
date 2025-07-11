@@ -23,7 +23,7 @@ function sortGridItems(
   });
 }
 
-function startup(): void  {
+function startup(): void {
   const gridContainer = document.querySelector(".card-catalog");
   const sortButton = document.getElementById(
     "sort-button"
@@ -38,10 +38,10 @@ function startup(): void  {
   }
   // Create array of grid items
   const gridItems = Array.from(gridContainer.children);
- 
+
   let sortOrder: string = sortButton.value;
   const isAscending: number = sortOrder === "ascending" ? 1 : -1;
-  
+
   let nameToNum: Map<string, number> = new Map([
     ["Ainok Bond-Kin", 5],
     ["Wrenn and Six", 553],
@@ -58,12 +58,10 @@ function startup(): void  {
 
 function sortCollectorNum(): void {
   const gridContainer = document.querySelector(".card-catalog");
-  // Create array of grid items
-  const gridItems = Array.from(gridContainer.children);
+
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
-
 
   if (
     !(gridContainer instanceof HTMLElement) ||
@@ -72,6 +70,9 @@ function sortCollectorNum(): void {
     console.error("Required DOM elements not found or have incorrect types.");
     return;
   }
+
+  // Create array of grid items
+  const gridItems = Array.from(gridContainer.children);
 
   // Mapping of card name to collector number
   let nameToNum: Map<string, number> = new Map([
