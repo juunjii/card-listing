@@ -10,6 +10,9 @@
   },
   "devDependencies": {
     "typescript": "^4.6.4",
-    "vite": "^3.0.4"
+    "vite": "^7.0.4"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
   }
 }
