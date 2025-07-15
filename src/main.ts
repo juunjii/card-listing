@@ -1,64 +1,81 @@
 import "./style.css";
+// Declare XLSX as global variable
+declare const XLSX: any;
 
-function sortGridItems(
-  gridItems: Element[],
-  isAscending: number,
-  nameToNum: Map<string, number>
-) {
-  gridItems.sort((a, b) => {
-    const imgA = a.querySelector("img");
-    const imgB = b.querySelector("img");
+interface Cards {
+  "Card ID": string;
+  "Collector Number": number;
+  Description: string;
+  Image: string;
+  Name: string;
+  Set: string;
+}
 
-    if (!imgA || !imgB) return 0;
+async function parseExcel(): Promise<Array<Cards>> {
+  try {
+    const response = await fetch("cards.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
 
-    const cardA = imgA.alt;
-    const cardB = imgB.alt;
+    // Read the Excel workbook
+    const workbook = XLSX.read(data, { type: "array" });
 
-    const numA = nameToNum.get(cardA);
-    const numB = nameToNum.get(cardB);
+    // Get the first sheet name
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
 
-    if (numA === undefined || numB === undefined) return 0;
-
-    return (numA - numB) * isAscending;
-  });
+    // Convert the sheet data to JSON
+    const jsonData: Array<Cards> = XLSX.utils.sheet_to_json(worksheet);
+    // console.log(jsonData);
+    return jsonData;
+  } catch (error) {
+    console.error("Error fetching or reading Excel file:", error);
+    throw error;
+  }
 }
 
 function startup(): void {
-  const gridContainer = document.querySelector(".card-catalog");
-  const sortButton = document.getElementById(
-    "sort-button"
-  ) as HTMLSelectElement;
+  parseExcel()
+    .then((data) => {
+      data.sort((a, b) => {
+        // return a.Name.localeCompare(b.Name);
+        return a["Collector Number"] - b["Collector Number"] * 1;
+      });
 
-  if (
-    !(gridContainer instanceof HTMLElement) ||
-    !(sortButton instanceof HTMLSelectElement)
-  ) {
-    console.error("Required DOM elements not found or have incorrect types.");
-    return;
-  }
-  // Create array of grid items
-  const gridItems = Array.from(gridContainer.children);
+      const gridContainer = document.querySelector(".card-catalog");
 
-  let sortOrder: string = sortButton.value;
-  const isAscending: number = sortOrder === "ascending" ? 1 : -1;
+      if (!(gridContainer instanceof HTMLElement)) {
+        console.error(
+          'DOM element - "card-catalog" not found or have incorrect type'
+        );
+      }
 
-  let nameToNum: Map<string, number> = new Map([
-    ["Ainok Bond-Kin", 5],
-    ["Wrenn and Six", 553],
-    ["Force of Negation", 50],
-    ["Mana Drain", 57],
-  ]);
+      data.forEach((item) => {
+        const gridItem = document.createElement("div");
+        gridItem.classList.add("card-container");
+        gridItem.innerHTML = `
+        <img class="card"
+                    src=${item.Image}
+                    alt=${item.Name}>
+                <p class="set-collector"> ${item.Set} | ${(
+          "00" + item["Collector Number"]
+        ).slice(-3)}<br><span class="card-name">${item.Name}</span></p>
+                <p class="card-description">${item.Description}
+                </p>
+        `;
 
-  sortGridItems(gridItems, isAscending, nameToNum);
-
-  gridItems.forEach((item) => {
-    gridContainer?.appendChild(item);
-  });
+        if (gridContainer) {
+          gridContainer.appendChild(gridItem);
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to process Excel file:", error);
+    });
 }
 
 function sortCollectorNum(): void {
   const gridContainer = document.querySelector(".card-catalog");
-
   const sortButton = document.getElementById(
     "sort-button"
   ) as HTMLSelectElement;
@@ -71,27 +88,26 @@ function sortCollectorNum(): void {
     return;
   }
 
-  // Create array of grid items
-  const gridItems = Array.from(gridContainer.children);
+  sortButton.addEventListener("click", () => {
+    const sortOrder = sortButton.value;
+    const isAscending = sortOrder === "ascending" ? 1 : -1;
 
-  // Mapping of card name to collector number
-  let nameToNum: Map<string, number> = new Map([
-    ["Ainok Bond-Kin", 5],
-    ["Wrenn and Six", 553],
-    ["Force of Negation", 50],
-    ["Mana Drain", 57],
-  ]);
+    const gridItems = Array.from(gridContainer.children) as HTMLElement[];
 
-  // Get each image in grid item
-  sortButton!.addEventListener("change", () => {
-    let sortOrder: string = sortButton.value;
-    const isAscending: number = sortOrder === "ascending" ? 1 : -1;
+    gridItems.sort((a, b) => {
+      const aText = a.querySelector(".set-collector")?.textContent || "";
+      const bText = b.querySelector(".set-collector")?.textContent || "";
 
-    sortGridItems(gridItems, isAscending, nameToNum);
+      // Split by "|", get num, remove whitespace, defaults to 0, conver to int
+      const aNum = parseInt(aText.split("|")[1]?.trim() || "0", 10);
+      const bNum = parseInt(bText.split("|")[1]?.trim() || "0", 10);
 
-    // Add the arranged grid items back to parent grid
+      return (aNum - bNum) * isAscending;
+    });
+
+    // Re-append sorted items
     gridItems.forEach((item) => {
-      gridContainer?.appendChild(item);
+      gridContainer.appendChild(item); // Moves element, doesn't duplicate
     });
   });
 }
